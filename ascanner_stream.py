@@ -16,7 +16,7 @@
 
 # # <YOUR CODE GOES HERE>
 # # You can use any libraries you want
-
+to_gwei = 1_000_000_000
 
 from utils.providers import get_provider_from_uri
 from utils import hex_to_dec
@@ -170,7 +170,7 @@ calculate_all['optimal_dx'] = calculate_all.apply(
     axis=1
 )
 
-calculate_all['profit'] = calculate_all.apply(
+calculate_all['profit_USD'] = calculate_all.apply(
     lambda x: arbitrage.get_optimal_profit(
         x1=int(x['WETH_balance_uni']),
         y1=int(x['other_balance_uni']),
@@ -184,8 +184,14 @@ calculate_all['profit'] = calculate_all.apply(
     axis=1
 )
 
-what_to_buy = calculate_all[(calculate_all['arb_cond'])]
-what_to_buy = what_to_buy[['token','arb_cond', 'arb_act', 'profit']]
+calculate_all['optimal_dx'] = calculate_all['optimal_dx']/to_gwei
+
+calculate_all['ROE_in_%'] = (100*calculate_all['profit_USD'])/(abs(1820*calculate_all['optimal_dx']))
+
+
+what_to_buy = calculate_all[(calculate_all['arb_cond'])&(calculate_all['profit_USD']>0)]
+what_to_buy = what_to_buy[['token','arb_cond', 'arb_act', 'profit_USD', 'ROE_in_%']]
+
 
 name= []
 for i in list(what_to_buy.token):
@@ -193,6 +199,6 @@ for i in list(what_to_buy.token):
     name  += [token_contract.functions.name().call()]
 
 what_to_buy['name'] = name
-what_to_buy = what_to_buy[['name', 'token', 'arb_cond', 'arb_act', 'profit']]
+what_to_buy = what_to_buy[['name', 'token','arb_cond', 'arb_act', 'profit_USD', 'ROE_in_%']]
 what_to_buy.to_csv('what_to_buy.csv', index=False)
 calculate_all.to_csv('calculate_all.csv', index = False)

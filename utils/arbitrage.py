@@ -2,6 +2,17 @@ from const import UNIT_IN_BPS
 from math import sqrt
 
 GAS_USAGE = 350000
+to_gwei = 1_000_000_000
+
+
+from utils.providers import get_provider_from_uri
+from web3 import Web3
+
+PROVIDER_URI = "https://eth.getblock.io/ee60e639-1307-4c20-8d64-f4441ea4b678/mainnet/"
+BATCH_W3 = get_provider_from_uri(PROVIDER_URI, batch=True)
+W3 = Web3(BATCH_W3)
+
+gas_fee = (GAS_USAGE*W3.eth.gasPrice)//to_gwei
 
 
 def arbitrage_action(
@@ -19,7 +30,7 @@ def arbitrage_action(
         r2_bps (int): 1 - phi2 in basis points, where phi2 is the fee for 2nd DEX
 
     Returns:
-        bool: Returns True if arbitrage opportunity exists and False otherwise
+        bool: Returns Action if arbitrage opportunity exists and - otherwise
     """
 
     if x2*y1*r1_bps*r2_bps > 100_000_000*x1*y2:
@@ -76,7 +87,7 @@ def get_optimal_dx(
 
     num = 10_000*int(sqrt(x1*y1*x2*y2*r1_bps*r2_bps)) - 100_000_000*x1*y2
     den = (10_000*r1_bps*y2 + r1_bps*r2_bps*y1) * (10**dec)
-    return num // den
+    return (to_gwei*num) // den
 
 
 def get_optimal_profit(
@@ -100,9 +111,9 @@ def get_optimal_profit(
     """
     def calc_profit(x1, y1, x2, y2, r1_bps, r2_bps, dec):
         dx = get_optimal_dx(x1, y1, x2, y2, r1_bps, r2_bps, dec)
-        dy = y1 * r1_bps * dx // (10_000 * x1 + r1_bps * dx)
-        dx_new = x2 * r2_bps * dy // (10_000 * y2 + r2_bps * dy)
-        return dx_new - dx
+        dy = (to_gwei*y1 * r1_bps * dx) // (to_gwei*10_000 * x1 + r1_bps * dx)
+        dx_new = (to_gwei*x2 * r2_bps * dy) // (to_gwei*10_000 * y2 + r2_bps * dy)
+        return (1820*(dx_new - dx -  gas_fee)) //to_gwei
 
     arb_cond = arbitrage_condition(x1, y1, x2, y2, r1_bps, r2_bps)
     instr = arbitrage_action(x1, y1, x2, y2, r1_bps, r2_bps)
