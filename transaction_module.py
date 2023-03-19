@@ -20,7 +20,7 @@ SUSHISWAPV2_FACTORY_CONTRACT = W3.eth.contract(
     address=ADDRESSES.sushiswapv2_factory, abi=UNISWAPV2_FACTORY_ABI
 )
 
-sender_address = "0xa3113b29E132416e30eB62D1c9AF77c0eD013432"
+sender_address = input(f"Enter your address with WETH")
 
 what_to_buy = pd.read_csv('what_to_buy.csv')
 

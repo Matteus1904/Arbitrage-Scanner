@@ -1,6 +1,5 @@
 name,token,arb_cond,arb_act,profit_USD,ROE_in_%
-iEx.ec Network Token,0x607f4c5bb672230e8672085532f7e901544a7375,True,Sell Eth at Sushi,534671958,0.33584926944110166
-Serum,0x476c5e26a75bd202a9683ffd34359c0cc15be0ff,True,Sell Eth at Sushi,136040963903,0.4505381037962782
-DELTA.financial - deep DeFi derivatives,0x9ea3b5b4ec044b70375236a281986106457b20ef,True,Sell Eth at Sushi,37092,311.71011782840066
-Golden Duck,0x378e8c47eb42cce0dd9cff48276a2ab73e9c254f,True,Sell Eth at Uni,7,5.196682953860981e-09
-TheRedOrder,0x69fe11b042789bc6e2fdaad064afd32bb298ae05,True,Sell Eth at Uni,11,4.340864764981109
+Celsius,0xaaaebe6fe48e54f431b0c390cfaf0b017d09d42d,True,Sell Eth at Sushi,82696820798303,0.6114240616252054
+DELTA.financial - deep DeFi derivatives,0x9ea3b5b4ec044b70375236a281986106457b20ef,True,Sell Eth at Sushi,37114,311.8438157373527
+Golden Duck,0x378e8c47eb42cce0dd9cff48276a2ab73e9c254f,True,Sell Eth at Uni,5,3.7119163956149864e-09
+TheRedOrder,0x69fe11b042789bc6e2fdaad064afd32bb298ae05,True,Sell Eth at Uni,8,3.156992556349898
