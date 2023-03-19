@@ -23,6 +23,10 @@ python3 ascanner_stream.py
 
 * [`calculate_all.csv`](/calculate_all.csv) - technical file with the same structure, as what_to_buy.csv, but contains all calculated pairs - needed for gathering statistics 
 
+* [`stats.csv`](/stats.csv) - file with statistics - number of arbitrage opportuninies, sum of potential arb profits in USD, and ROE at specific point of time
+
+* In [`transaction_module.py`](/transaction_module.py) - run the transactions from what_to_buy file. Private key is needed. Aware that this operation can be risky - this module is not tested carefully yet due to the problems of running testnet in Uniswap and Sushiswap
+
 * [`const`](/const/) folder contains global constants that are needed for the project.
 * [`utils/arbitrage.py`](/utils/arbitrage.py) contains utils for all the arbitrage checking and calculations.
 * [`utils/providers.py`](/utils/providers.py) is needed for batch requests functionality

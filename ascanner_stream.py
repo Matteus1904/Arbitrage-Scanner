@@ -190,3 +190,18 @@ what_to_buy['name'] = name
 what_to_buy = what_to_buy[['name', 'token','arb_cond', 'arb_act', 'profit_USD', 'ROE_in_%']]
 what_to_buy.to_csv('what_to_buy.csv', index=False)
 calculate_all.to_csv('calculate_all.csv', index = False)
+
+
+data = {
+  "Overall_arbitrage_USD_profit": [what_to_buy.profit_USD.sum()],
+  "ROE_in_%": [what_to_buy['ROE_in_%'].median()],
+  "Number_of_arbitrage_poistions":[what_to_buy.shape[0]]
+}
+
+df = pd.DataFrame(data)
+
+stats = pd.read_csv('stats.csv')
+
+stats = pd.concat([stats, df], ignore_index=True)
+
+stats.to_csv('stats.csv', index = False)
