@@ -1,21 +1,3 @@
-# import argparse
-# from utils.providers import get_provider_from_uri
-
-# parser = argparse.ArgumentParser(
-#     prog="Arbitrage Scanner stream mode",
-#     description="The project enables users find arbitrage opportunities in evm blockchains in stream mode",
-# )
-
-
-# parser.add_argument("--pairs", type=str, default=None, required=True)
-# parser.add_argument("--provider-uri", type=str, default=None, required=True)
-
-# args = parser.parse_args()
-
-# batch_w3 = get_provider_from_uri(args.provider_uri, batch=True)
-
-# # <YOUR CODE GOES HERE>
-# # You can use any libraries you want
 to_gwei = 1_000_000_000
 
 from utils.providers import get_provider_from_uri
@@ -35,7 +17,7 @@ import numpy as np
 
 pd.options.mode.chained_assignment = None
 
-final = pd.read_csv('final.csv') 
+pairs = pd.read_csv('pairs.csv') 
 
 # Let us create py-web3 objects for Ethereum node DDOS
 PROVIDER_URI = "https://eth.getblock.io/ee60e639-1307-4c20-8d64-f4441ea4b678/mainnet/"
@@ -47,7 +29,7 @@ block_number = W3.eth.block_number
 get_reserves_request = json.dumps(
     [
         get_request_get_reserves(pair_address, block_number, request_id=i)
-        for i, pair_address in enumerate(final.pair_address_uni)
+        for i, pair_address in enumerate(pairs.pair_address_uni)
     ]
 )
 batch_response = BATCH_W3.make_batch_request(get_reserves_request)
@@ -61,7 +43,7 @@ reserves_uni = balances = [
 get_reserves_request = json.dumps(
     [
         get_request_get_reserves(pair_address, block_number, request_id=i)
-        for i, pair_address in enumerate(final.pair_address_sushi)
+        for i, pair_address in enumerate(pairs.pair_address_sushi)
     ]
 )
 batch_response = BATCH_W3.make_batch_request(get_reserves_request)
@@ -76,17 +58,23 @@ reserves_sushi = balances = [
 res0_uni, res1_uni = zip(*reserves_uni)
 res0_sushi, res1_sushi = zip(*reserves_sushi)
 
-final['res0_uni'] = res0_uni
-final['res1_uni'] = res1_uni
+pairs['res0_uni'] = res0_uni
+pairs['res1_uni'] = res1_uni
 
-final['res0_sushi'] = res0_sushi
-final['res1_sushi'] = res1_sushi
+pairs['res0_sushi'] = res0_sushi
+pairs['res1_sushi'] = res1_sushi
 
-final['other_balance_uni'] = np.where(final.token0 == ADDRESSES.weth.lower(), final.res1_uni,
-                   np.where(final.token1 == ADDRESSES.weth.lower(), final.res0_uni, np.nan))
+pairs['WETH_balance_uni'] = np.where(pairs.token0 == ADDRESSES.weth.lower(), pairs.res0_uni,
+                   np.where(pairs.token1 == ADDRESSES.weth.lower(), pairs.res1_uni, np.nan))
 
-final['other_balance_sushi'] = np.where(final.token0 == ADDRESSES.weth.lower(), final.res1_sushi,
-                   np.where(final.token1 == ADDRESSES.weth.lower(), final.res0_sushi, np.nan))
+pairs['WETH_balance_sushi'] = np.where(pairs.token0 == ADDRESSES.weth.lower(), pairs.res0_sushi,
+                   np.where(pairs.token1 == ADDRESSES.weth.lower(), pairs.res1_sushi, np.nan))
+
+pairs['other_balance_uni'] = np.where(pairs.token0 == ADDRESSES.weth.lower(), pairs.res1_uni,
+                   np.where(pairs.token1 == ADDRESSES.weth.lower(), pairs.res0_uni, np.nan))
+
+pairs['other_balance_sushi'] = np.where(pairs.token0 == ADDRESSES.weth.lower(), pairs.res1_sushi,
+                   np.where(pairs.token1 == ADDRESSES.weth.lower(), pairs.res0_sushi, np.nan))
 
 
 def get_param_get_reserves(address):
@@ -116,7 +104,7 @@ def get_request_get_decimals(token, block_identifier, request_id):
 get_reserves_decimals = json.dumps(
     [
         get_request_get_decimals(token, block_number, request_id=i)
-        for i, token in enumerate(final.token)
+        for i, token in enumerate(pairs.token)
     ]
 )
 batch_response = BATCH_W3.make_batch_request(get_reserves_decimals)
@@ -127,9 +115,9 @@ decimals = [
     for response_item in batch_response
 ]
 
-final['decimals'] = decimals
+pairs['decimals'] = decimals
 
-calculate_all = final[['WETH_balance_uni', 'WETH_balance_sushi', 'decimals' , 'other_balance_uni', 'other_balance_sushi', 'token']]
+calculate_all = pairs[['WETH_balance_uni', 'WETH_balance_sushi', 'decimals' , 'other_balance_uni', 'other_balance_sushi', 'token']]
 
 from utils import arbitrage
 

@@ -1,14 +1,15 @@
 # Arbitrage scanner
 Our goal is to find arbitrage opportunities between 2 Uniswap-like DEXes 
-([Uniswap](https://v2.info.uniswap.org/home) and [Sushiswap](https://www.sushi.com/)) either for specific block range 
+([Uniswap](https://v2.info.uniswap.org/home) and [Sushiswap](https://www.sushi.com/)) for newly mined blocks:
 
 ```bash
 # Usage example
 # Find all arbitrage opportunities in stream mode
+#Find existing pairs of tokens
+python3 generate_pairs.py
+#Find the arbitrage opportunities
 python3 ascanner_stream.py
 ```
-In other words, `ascanner_stream.py` should work forever and check every N seconds whether new block was mined and find 
-arbitrage opportunities for predefined number of pairs in newly mined blocks.
 
 ## Repo discription
 
