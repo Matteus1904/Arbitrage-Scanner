@@ -11,7 +11,7 @@ python3 generate_pairs.py
 python3 ascanner_stream.py
 ```
 
-## Repo discription
+## Repo description
 
 * In [`notes.ipynb`](/notes.ipynb) basic info about project is presented
 
