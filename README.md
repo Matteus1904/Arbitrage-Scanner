@@ -1,6 +1,5 @@
 # Arbitrage scanner
-Our goal is to find arbitrage opportunities between 2 Uniswap-like DEXes 
-([Uniswap](https://v2.info.uniswap.org/home) and [Sushiswap](https://www.sushi.com/)) for newly mined blocks:
+Arbitrage is the simultaneous purchase and sale of the same or similar asset in different markets in order to profit from tiny differences in the asset's listed price. In our project we theoretically derive an amount of tokens to be bought and sold in case of arbitrage opportunity between two Uniswap-like DEXes ([Uniswap](https://v2.info.uniswap.org/home) and [Sushiswap](https://www.sushi.com/)) for newly mined blocks. We implement the scanner as a batch request system using Web3 framework and a separate module to execute transactions. During testing at specific points of time, our implementation shows its ability to find arbitrage opportunities and calculate the profits, and demonstrates its time efficiency.
 
 ```bash
 # Usage example
